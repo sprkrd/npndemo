@@ -268,7 +268,7 @@ class NPNet:
                 layer.b_m -= eta*gb_m[n_layer]
                 layer.b_s = np.maximum(layer.b_s - eta*gb_s[n_layer], 0)
             error_avg_ = error_total / x.shape[0]
-            if (error_avg_ - error_avg) > 1e-3: eta *= 0.95
+            if (error_avg_ - error_avg) > -1e-4: eta *= 0.95
             error_avg = error_avg_
             if verbose:
                 print("Iteration: {}, error_avg: {}, eta: {}".format(

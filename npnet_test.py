@@ -38,13 +38,12 @@ if __name__ == '__main__':
     np.random.seed(42)
     npn = NPNet([1, 100, 1], ['sigmoid', 'linear'], 'gaussian', 1.0)
     np.random.seed(72)
-    f = lambda x: np.power(x, 3)
-    g = lambda x: 9 # np.exp(x)
-    x_, y_ = function_truth(-5, 5, 100, f)
-    x, y = sample_function(-5, 5, 10,  f, g)
-    npn.train(x, y, eta=1e-1, max_iterations=1000, sigma=0.0, lambda_s=4e-3,
+    f = lambda x: np.power(x, 2)
+    g = lambda x: np.power(x+5, 1.25)
+    x, y = sample_function(-5, 5, 30,  f, g)
+    npn.train(x, y, eta=1e-1, max_iterations=1000, sigma=0.0, lambda_s=1e-3,
               lambda_d=0.0, h=0.0, epsilon=1e-9, verbose=True)
-    plt.show(plot_truth_and_guess(x_, y_, x, y, npn))
+    plt.show(plot_truth_and_guess(f, g, x, y, npn))
 
 
 
