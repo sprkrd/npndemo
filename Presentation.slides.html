@@ -11862,7 +11862,20 @@ a.anchor-link {
 <h1 id="Natural-Parameter-Networks:-a-Class-of-Probabilistic-Natural-Networks">Natural Parameter Networks: a Class of Probabilistic Natural Networks<a class="anchor-link" href="#Natural-Parameter-Networks:-a-Class-of-Probabilistic-Natural-Networks">&#182;</a></h1><h2 id="A-paper-by-H.-Wang,-X.-Shi-and-D.Y.-Yeung-[1]">A paper by H. Wang, X. Shi and D.Y. Yeung [1]<a class="anchor-link" href="#A-paper-by-H.-Wang,-X.-Shi-and-D.Y.-Yeung-[1]">&#182;</a></h2>
 </div>
 </div>
-</div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this presentation we will see a small overview of the so-called Natural Parameter Networks, or NPN. This is a work from 2016 by Wang, Shi and Yeung, presented in a paper for the NIPS (Neural Information Processing Systems) conference of the former year.</p>
+<p>For the purpose of preparing this presentation I have reviewed the paper itself, the supplementary material and a spotlight video by the main author. I have also coded a basic implementation of the proposal with the hope that it will be useful to better illustrate NPNs, and I have even contacted the main author to gain more insight on more specific information about some topics.</p>
+
+</div>
+</div>
+</div>
+</aside></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -11891,7 +11904,7 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>Probabilistic Graphical Models flexibility to fit distributions, but without sampling</li>
+<li>Probabilistic Graphical Models' flexibility to fit distributions, but without sampling</li>
 </ul>
 
 </div>
@@ -11923,13 +11936,29 @@ a.anchor-link {
 
 </div>
 </div>
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="What-are-NPNs?">What are NPNs?<a class="anchor-link" href="#What-are-NPNs?">&#182;</a></h1><table>
+<p>So what are the ideas that have guided this work? The intention of the authors is to combine the best of Probabilistic Graphical Models and Neural Networks. More specifically this means that they want to explicitly manage the uncertainty about the network's prediction; have more or less the same flexibility to fit distributions as PGMs but skipping costly sampling methods; the scalability of neural networks, both for specifying the architecture and for the highly studied training methods; and finally, they also wish to have a wide selection of distributions to choose from to model the data. We will see that one of the strong points of NPNs is that, unlike some other bayesian-based neural networks, they can use any of the distributions of the exponential family.</p>
+
+</div>
+</div>
+</div>
+</aside></div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-are-NPNs?">What are NPNs?<a class="anchor-link" href="#What-are-NPNs?">&#182;</a></h1><ul>
+<li>In standard neural nets weights, biases and neuron values are real quantities.</li>
+<li>Weights, biases and neuron values are random variables that follow a distribution from the exponential family</li>
+</ul>
+<table>
 <thead><tr>
 <th style="text-align:center">Standard Neural Net</th>
 <th style="text-align:center">Natural Parameter Net. Source: [2]</th>
@@ -11945,24 +11974,19 @@ a.anchor-link {
 
 </div>
 </div>
-</div></section><section>
+</div><aside class="notes">
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In standard neural nets:</p>
-<ul>
-<li>Weights, biases and neuron values are real quantities</li>
-</ul>
-<p>In NPN:</p>
-<ul>
-<li>Weights, biases and neuron values are random variables that follow a distribution from the exponential family</li>
-</ul>
+<p>What is exactly an NPN? It is in essence a neural network in which both the neuron's values and the parameters are random variables. At the left we can see a representation of a regular neural net, with real values in both the neurons and the weights, and at the right we can see a NPN in which the neurons and the weights are random variables that have associated a certain distribution. So, we specify each weight and neuron with the parameters of the distribution associated to the random value, and this distributions are propagated up to the output layer.</p>
 
 </div>
 </div>
-</div></section></section><section><section>
+</div>
+</aside></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -12033,7 +12057,19 @@ $$ p(x | \boldsymbol{\eta}) = h(x) g(\boldsymbol{\eta}) exp(\boldsymbol{\eta}^T 
 
 </div>
 </div>
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the context of the NPN frameworks we can use any of the distributions from the exponential family to model the neurons and the weights. These distributions have this form and are typically determined by two parameters. The parameters (the $ \boldsymbol{\eta} $ vector we can see in the slides) are the natural parameters that give the name to the framework. This family of distributions includes, but is not limited, to all the following distributions. Typically is enough with two parameters.</p>
+
+</div>
+</div>
+</div>
+</aside></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -12091,7 +12127,25 @@ $$ D_{KL}(P\ ||\ Q) = \int_\mathbb{R} p(x) \log\left(\frac{p(x)}{q(x)}\right) \m
 $$ D_{KL}(\mathcal{N}(\mu_1, \sigma_1^2), \mathcal{N}(\mu_2, \sigma_2^2)) = \frac{1}{2}\left[ \frac{(\mu_2 - \mu_1)^2}{\sigma_2^2} + \frac{\sigma_1^2}{\sigma_2^2} - 1 - \log\left(\frac{\sigma_1^2}{\sigma_2^2}\right) \right] $$
 </div>
 </div>
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>These are some of the particularities of NPN:</p>
+<ul>
+<li>They require twice the number of parameters than NN with the same architecture.</li>
+<li>Special care has to be taken when performing the feedforward and non-linear transformations of the distributions.</li>
+<li>It is possible to perform backpropagation much like in regular neural nets.</li>
+<li>And loss or error functions should measure the difference between probability distributions rather than point estimates. An example of such function is the KL divergence that we have seen in the course, it has this form for continuous variables and this is the closed expression for Gaussian distributions.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</aside></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -12489,7 +12543,23 @@ iwvEzMxycYGYmVku/wNQecMlInJXjwAAAABJRU5ErkJggg==
 </div>
 </div>
 
-</div></div></section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let us review as an example a toy regression problem. I have prepared these examples with my implementation.</p>
+<p>Here we have a continuous function in blue. The shaded region represents three times the deviation of the sampled points for that x. The red line represents the function expressed by an untrained randomized NPN with just one hidden layer with 100 neurons, and the shaded region is the deviation estimate. The green points (30 in total) represent a random sample of the function we want to approximate.</p>
+<p>We will see how the net evolves after 100 iterations of Gradient Descent...</p>
+<p>After 500...</p>
+<p>And after 1000 iterations. We can see how the estimated means follows more or less the ground truth and the variance of the sample points (the shaded area is thinner at the left and thicker at the right).</p>
+
+</div>
+</div>
+</div>
+</aside></div></section><section>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
@@ -14340,7 +14410,7 @@ gg==
 </div>
 </div>
 
-</div></div></section><section>
+</div></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -14793,22 +14863,25 @@ EhEFiIiIROT/AUKp1KDv4x41AAAAAElFTkSuQmCC
 </div>
 </div>
 
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Results:-MNIST">Results: MNIST<a class="anchor-link" href="#Results:-MNIST">&#182;</a></h1><p>Tested against MNIST dataset. Results extracted from the work of Wang and others [1, 3]:</p>
+<p>This example simply illustrates that we can use regularization to control the complexity of the network, much like in regular neural nets.</p>
 
 </div>
 </div>
-</div><div class="fragment">
+</div>
+</aside></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Results">Results<a class="anchor-link" href="#Results">&#182;</a></h1><h2 id="Classification:-MNIST">Classification: MNIST<a class="anchor-link" href="#Classification:-MNIST">&#182;</a></h2><p>Tested against MNIST dataset. Results extracted from the work of Wang and others [1, 3]:</p>
 <table>
 <thead><tr>
 <th style="text-align:right">Method</th>
@@ -14834,21 +14907,14 @@ EhEFiIiIROT/AUKp1KDv4x41AAAAAElFTkSuQmCC
 </table>
 <table>
 <thead><tr>
-<th></th>
-<th></th>
-<th></th>
-<th></th>
-<th></th>
+<th>Size</th>
+<th>100</th>
+<th>500</th>
+<th>2000</th>
+<th>10000</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Size</strong></td>
-<td>100</td>
-<td>500</td>
-<td>2000</td>
-<td>10000</td>
-</tr>
 <tr>
 <td><strong>NPN</strong></td>
 <td>29.97%</td>
@@ -14875,22 +14941,26 @@ EhEFiIiIROT/AUKp1KDv4x41AAAAAElFTkSuQmCC
 
 </div>
 </div>
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Results:-variance">Results: variance<a class="anchor-link" href="#Results:-variance">&#182;</a></h1><p>The output variance is an effective proxy to assess the certainty that the network has on its own predictions:</p>
+<p>These are some classification results directly extracted from the paper and that use the well-known MNIST dataset. These results show that, even if NPNs do not vastly outperform current state of the art techniques for classification, they can keep it up with them.</p>
 
 </div>
 </div>
-</div><div class="fragment">
+</div>
+</aside><aside class="notes">
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Results">Results<a class="anchor-link" href="#Results">&#182;</a></h1><h2 id="Variance-as-a-means-to-assess-accuracy-of-prediction">Variance as a means to assess accuracy of prediction<a class="anchor-link" href="#Variance-as-a-means-to-assess-accuracy-of-prediction">&#182;</a></h2><p>The output variance is an effective proxy to assess the certainty that the network has on its own predictions:</p>
 <table>
 <thead><tr>
 <th style="text-align:center">Output variance vs accuracy (MNIST). Source: [3]</th>
@@ -14907,7 +14977,20 @@ EhEFiIiIROT/AUKp1KDv4x41AAAAAElFTkSuQmCC
 
 </div>
 </div>
-</div></div></section></section><section><section>
+</div>
+</aside><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And this is what I think it is more interesting: the predicted variance gives us an idea of the certainty that the network has in it own predictions, since it seems to be correlated with the performance function. At the left we can see the relation between the variance and the error in the classification MNIST task while at the right we can see the reconstruction error w.r.t. to the variance in a unsupervised representational learning task.</p>
+
+</div>
+</div>
+</div>
+</aside></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -14952,7 +15035,24 @@ EhEFiIiIROT/AUKp1KDv4x41AAAAAElFTkSuQmCC
 
 </div>
 </div>
-</div></div></section></section><section><section>
+</div><aside class="notes">
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The summary of the discussed framework is presented in this slide:</p>
+<ul>
+<li>There are enough details in the paper to implement them</li>
+<li>It is competitive with techniques in recent literature</li>
+<li>And the output variance is an effective proxy to assess how much should we trust the network's prediction.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</aside></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
